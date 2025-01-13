@@ -37,7 +37,7 @@ public class ProductRepository(StoreContext context) : IProductRepository
         return await context.Products.FindAsync(id);
     }
 
-    public IQueryable<Product> GetProductsAsync(ProductSpecParams specParams)
+    public IQueryable<Product> GetProductsQuery(ProductSpecParams specParams)
     {
         var query = context.Products.AsQueryable();
         

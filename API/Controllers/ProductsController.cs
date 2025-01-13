@@ -107,7 +107,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery]ProductSpecParams specParams)
         {
-            var query = productRepository.GetProductsAsync(specParams);
+            var query = productRepository.GetProductsQuery(specParams);
 
             return Ok(await PagedList<Product>.CreateAsync(query, specParams.PageIndex, specParams.PageSize));
         }
