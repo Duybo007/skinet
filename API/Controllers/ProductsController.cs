@@ -1,4 +1,5 @@
 
+using API.RequestHelpers;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
@@ -6,21 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController(IGenericRepository<Product> repo, IProductRepository productRepository) : ControllerBase
+    public class ProductsController(IGenericRepository<Product> repo, IProductRepository productRepository) : BaseApiController
     {
         //  Specification Pattern
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string? brand, string? type, string? sort)
-        {
-            var spec = new ProductSpecification(brand, type, sort);
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery]ProductSpecParams specParams)
+        // {
+        //     var spec = new ProductSpecification(specParams);
 
-            var products = await repo.ListAsync(spec);
-
-            return Ok(products);
-        }
+        //     return await CreatePagedResult(repo, spec, specParams.PageIndex, specParams.PageSize);
+        // }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
@@ -102,12 +98,19 @@ namespace API.Controllers
 
 
 
+
+
+
+
+
         // Repository Pattern
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string? brand, string? type, string? sort)
-        // {
-        //     return Ok(await productRepository.GetProductsAsync(brand, type, sort));
-        // }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery]ProductSpecParams specParams)
+        {
+            var query = productRepository.GetProductsAsync(specParams);
+
+            return Ok(await PagedList<Product>.CreateAsync(query, specParams.PageIndex, specParams.PageSize));
+        }
         // [HttpGet("{id:int}")]
         // public async Task<ActionResult<Product>> GetProduct(int id)
         // {

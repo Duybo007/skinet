@@ -1,6 +1,7 @@
 using System;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
@@ -36,24 +37,33 @@ public class ProductRepository(StoreContext context) : IProductRepository
         return await context.Products.FindAsync(id);
     }
 
-    public async Task<IReadOnlyList<Product>> GetProductsAsync(string? brand, string? type, string? sort)
+    public IQueryable<Product> GetProductsAsync(ProductSpecParams specParams)
     {
         var query = context.Products.AsQueryable();
+        
+        if(specParams.Brands.Count != 0)
+        {
+            query = query.Where(x => specParams.Brands.Contains(x.Brand));
+        }
+        
+        if(specParams.Types.Count != 0)
+        {
+            query = query.Where(x => specParams.Types.Contains(x.Type));
+        }
 
-        if(!string.IsNullOrWhiteSpace(brand))
-            query = query.Where(x => x.Brand == brand);
+        if(specParams.Search != "")
+        {
+            query = query.Where(x => x.Name.Contains(specParams.Search));
+        }
 
-        if(!string.IsNullOrWhiteSpace(type))
-            query = query.Where(x => x.Type == type);
-
-        query = sort switch
+        query = specParams.Sort switch
         {
             "priceAsc" => query.OrderBy(x => x.Price),
             "priceDesc" => query.OrderByDescending(x => x.Price),
             _ => query.OrderBy(x => x.Name)
         };
 
-        return await query.ToListAsync();
+        return query;
     }
 
     public bool ProductExists(int id)
