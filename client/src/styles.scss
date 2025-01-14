@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 
 @tailwind base;
 @tailwind components;
@@ -12,6 +12,31 @@ $customTheme: mat.define-light-theme($primary, $accent, $warn);
 
 @include mat.core();
 
+.custom-theme {
+  @include mat.all-component-themes($customTheme);
+
+  .mdc-button,
+  .mdc-stroked-button,
+  .mdc-flat-button {
+    @apply rounded-md;
+  }
+}
+
 .container {
-    @apply mx-auto max-w-screen-2xl
+  @apply mx-auto max-w-screen-2xl;
+}
+
+.btn-stroked {
+    @apply border py-2 rounded-md hover:bg-gray-200 focus:ring-4 focus:outline-none font-medium text-sm px-5 text-center flex justify-center items-center me-2 
+}
+.btn-flat {
+  @apply border bg-purple-600 py-2 rounded-md hover:bg-purple-400 focus:ring-4 focus:outline-none font-medium text-sm px-5 text-center flex justify-center items-center me-2 text-white
+}
+
+.text-primary{
+  color: #7d00fa
+}
+
+button.match-input-height {
+  height: var(--mat-form-field-container-height) !important;
 }
