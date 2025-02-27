@@ -1,7 +1,5 @@
-using System;
 using API.DTOs;
 using Core.Entities;
-using Mono.TextTemplating;
 
 namespace API.Extensions;
 
