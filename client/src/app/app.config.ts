@@ -7,6 +7,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { InitService } from './core/services/init.service';
 import { lastValueFrom } from 'rxjs';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 /**
  * Function to initialize the app by calling InitService before the application starts.
@@ -41,7 +42,8 @@ export const appConfig: ApplicationConfig = {
 
     // Configures the HTTP client with optional interceptors (currently empty array)
     provideHttpClient(withInterceptors([
-      authInterceptor
+      authInterceptor,
+      loadingInterceptor
     ])),
 
     // Ensures that `initializeApp` runs before the app starts

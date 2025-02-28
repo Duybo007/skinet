@@ -17,6 +17,7 @@ import { CurrencyPipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { OrderToCreate, ShippingAddress } from '../../shared/models/order';
 import { OrderService } from '../../core/services/order.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-checkout',
@@ -41,7 +42,7 @@ export class CheckoutComponent implements OnInit, OnDestroy{
   private accountService = inject(AccountService);
   private router = inject(Router)
   private orderService = inject(OrderService)
-  // private snackbar = inject(SnackbarService);
+  private snackbar = inject(SnackbarService);
   addressElement?: StripeAddressElement;
   paymentElement?: StripePaymentElement;
   saveAddress = false;
@@ -58,8 +59,8 @@ export class CheckoutComponent implements OnInit, OnDestroy{
       this.paymentElement = await this.stripeService.createPaymentElement();
       this.paymentElement.mount('#payment-element')
       this.paymentElement.on('change', this.handlePaymentChange)
-    } catch (error) {
-      // this.snackbar.error(error.message)
+    } catch (error: any) {
+      this.snackbar.error(error.message)
     }
   }
 
@@ -92,7 +93,7 @@ export class CheckoutComponent implements OnInit, OnDestroy{
         this.confirmationToken = result.confirmationToken
       }
     } catch (error: any) {
-      // this.snackbar.error(error.message)
+      this.snackbar.error(error.message)
     }
   }
 
@@ -121,7 +122,7 @@ export class CheckoutComponent implements OnInit, OnDestroy{
         }
       }
     } catch (error: any) {
-      // this.snackbar.error(error.message || "Something went wrong")
+      this.snackbar.error(error.message || "Something went wrong")
       stepper.previous();
     } finally {
       this.loading = false

@@ -7,6 +7,7 @@ import { MatInput } from '@angular/material/input';
 import { AccountService } from '../../../core/services/account.service';
 import { Router } from '@angular/router';
 import { TextInputComponent } from "../../../shared/components/text-input/text-input.component";
+import { SnackbarService } from '../../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-register',
@@ -28,7 +29,7 @@ export class RegisterComponent {
   private fb = inject(FormBuilder)
   private accountService = inject(AccountService)
   private router = inject(Router)
-  // private snack = inject(SnackbarService)
+  private snack = inject(SnackbarService)
 
   validationErrors?: any[]
 
@@ -42,7 +43,7 @@ export class RegisterComponent {
   onSubmit(){
     this.accountService.register(this.registerForm.value).subscribe({
       next: (response) => {
-        // this.snack.success("Registration successful - you can now login")
+        this.snack.success("Registration successful - you can now login")
         this.router.navigateByUrl('/account/login')
       },
       error: (errors) => 
