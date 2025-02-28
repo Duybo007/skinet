@@ -74,7 +74,9 @@ public class OrdersController(ICartService cartService, IUnitOfWork unit, IProdu
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetOrdersForUser()
     {
-        var orders = await orderRepo.GetAllOrders();
+        var email = User.GetEmail();
+
+        var orders = await orderRepo.GetAllOrders(email);
 
         var ordersToReturn = orders.Select(x => x.ToDto()).ToList();
 
@@ -84,7 +86,9 @@ public class OrdersController(ICartService cartService, IUnitOfWork unit, IProdu
     [HttpGet("{id:int}")]
     public async Task<ActionResult<OrderDto>> GetOrderById(int id)
     {
-        var order = await orderRepo.GetOrderByIdAsync(id);
+        var email = User.GetEmail();
+
+        var order = await orderRepo.GetOrderByIdAsync(id, email);
 
         if(order == null) return NotFound();
 
